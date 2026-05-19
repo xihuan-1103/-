@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-brand-green: #00703C;
+  --color-brand-light: #F0F9F4;
+  --color-brand-dark: #004D29;
+}
+
+@utility bg-gradient-brand {
+  background: linear-gradient(135deg, var(--color-brand-green) 0%, var(--color-brand-dark) 100%);
+}
+
+@utility text-gradient-brand {
+  @apply bg-clip-text text-transparent bg-gradient-brand;
+}

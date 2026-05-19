@@ -1,0 +1,6 @@
+{
+  "name": "数智养护总体规划汇报",
+  "description": "数智养护三年行动方案（2026-2028）总体规划视觉汇报演示网页",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
