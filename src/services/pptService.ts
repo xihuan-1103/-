@@ -127,14 +127,42 @@ export async function generatePPT() {
 
   // Slide 5: Architecture
   const archSlide = ppt.addSlide();
-  archSlide.addText("二、总体架构: 打造“114N+AI”", { x: 0.5, y: 0.5, fontSize: 24, bold: true, color: BRAND_GREEN });
-  REPORT_DATA.architecture.components.forEach((comp, idx) => {
+  archSlide.addText("二、总体架构: 打造“11N+AI”", { x: 0.5, y: 0.5, fontSize: 24, bold: true, color: BRAND_GREEN });
+  
+  // Render the 3 components + AI as a 2x2 grid
+  const allPillars = [
+    ...REPORT_DATA.architecture.components,
+    { id: 'ai', title: 'AI赋能：智能驱动引擎', content: REPORT_DATA.architecture.ai }
+  ];
+
+  allPillars.forEach((comp, idx) => {
     const x = idx % 2 === 0 ? 0.5 : 5.2;
-    const y = Math.floor(idx / 2) * 2.2 + 1.2;
-    archSlide.addShape(ppt.ShapeType.rect, { x, y, w: 4.5, h: 2, fill: { color: "FFFFFF" }, line: { color: "E2E8F0" } });
-    archSlide.addText(comp.title, { x: x + 0.2, y: y + 0.2, w: 4.1, fontSize: 14, bold: true, color: BRAND_DARK });
-    archSlide.addText(comp.content, { x: x + 0.2, y: y + 0.6, w: 4.1, fontSize: 11, color: TEXT_SLATE });
+    const y = Math.floor(idx / 2) * 2.5 + 1.2;
+    
+    archSlide.addShape(ppt.ShapeType.rect, { 
+      x, y, w: 4.5, h: 2.2, 
+      fill: { color: "FFFFFF" }, 
+      line: { color: "E2E8F0" } 
+    });
+    
+    archSlide.addText(comp.title, { 
+      x: x + 0.2, y: y + 0.2, w: 4.1, 
+      fontSize: 13, bold: true, 
+      color: BRAND_DARK 
+    });
+    
+    // Manual highlighting logic for "以点连线、以线成面" in AI slide is complex in PPT, 
+    // so we'll just keep the text clean for now or use basic color.
+    archSlide.addText(comp.content.replace(/<[^>]*>/g, ''), { 
+      x: x + 0.2, y: y + 0.7, w: 4.1, 
+      fontSize: 10, 
+      color: TEXT_SLATE 
+    });
   });
+
+  // Adding a central "Intelligence" label for cohesion
+  archSlide.addShape(ppt.ShapeType.ellipse, { x: 4.6, y: 3.2, w: 1.0, h: 1.0, fill: { color: "FFFFFF" }, line: { color: BRAND_GREEN, width: 2 } });
+  archSlide.addText("数智养护", { x: 4.6, y: 3.6, w: 1.0, fontSize: 11, bold: true, color: BRAND_GREEN, align: "center" });
 
   // Slide 6: Action Plan Overview
   const timelineSlide = ppt.addSlide();
@@ -147,48 +175,71 @@ export async function generatePPT() {
   });
 
   // Slide 7: 2026 Focus
-  const p2026Slide = ppt.addSlide();
+  let p2026Slide = ppt.addSlide();
   p2026Slide.background = { color: BRAND_DARK };
-  p2026Slide.addText("2026年 “数智养护” 我们准备这样干！", { x: 0.5, y: 0.5, w: "90%", fontSize: 28, bold: true, color: "FFFFFF" });
-  p2026Slide.addText("1. 养护管理平台建设", { x: 0.5, y: 1.5, fontSize: 18, bold: true, color: "10B981" });
-  REPORT_DATA.year2026.platform.forEach((p, i) => {
-     p2026Slide.addText(`• ${p}`, { x: 0.7, y: 2 + i * 0.4, w: 4.5, fontSize: 10, color: "E0F2F1" });
-  });
-  p2026Slide.addText("2. AI排班智能体", { x: 5.5, y: 1.5, fontSize: 18, bold: true, color: "10B981" });
-  p2026Slide.addText(REPORT_DATA.year2026.ai, { x: 5.7, y: 2, w: 4, fontSize: 10, color: "E0F2F1" });
+  p2026Slide.addText("2026年 “数智养护” 我们准备这样干！", { x: 0.5, y: 0.5, w: "90%", fontSize: 24, bold: true, color: "FFFFFF" });
   
-  p2026Slide.addText("3. 专业场景平台", { x: 5.5, y: 3, fontSize: 18, bold: true, color: "10B981" });
-  REPORT_DATA.year2026.scenes.forEach((s, i) => {
-    p2026Slide.addText(`• ${s}`, { x: 5.7, y: 3.5 + i * 0.4, w: 4, fontSize: 9, color: "E0F2F1" });
-  });
+  let currentY = 1.2;
+  REPORT_DATA.year2026.categories.forEach((cat, idx) => {
+    if (currentY > 6.0) {
+      p2026Slide = ppt.addSlide();
+      p2026Slide.background = { color: BRAND_DARK };
+      p2026Slide.addText("2026年 “数智养护” 续", { x: 0.5, y: 0.5, w: "90%", fontSize: 24, bold: true, color: "FFFFFF" });
+      currentY = 1.2;
+    }
 
-  // Slide 8: Key Results
-  const krSlide = ppt.addSlide();
-  krSlide.addText("三个关键成果", { x: 0.5, y: 0.5, fontSize: 28, bold: true, color: BRAND_GREEN, align: "center" });
-  REPORT_DATA.keyResults.forEach((res, idx) => {
-    const x = 0.5 + idx * 3.1;
-    krSlide.addShape(ppt.ShapeType.rect, { x, y: 1.5, w: 2.8, h: 4, fill: { color: "F8FAFC" }, line: { color: "E2E8F0" } });
-    krSlide.addText(res.title, { x: x + 0.1, y: 1.7, w: 2.6, fontSize: 14, bold: true, color: BRAND_DARK });
-    if (res.points) {
-      res.points.forEach((p, i) => {
-        krSlide.addText(`- ${p.substring(0, 60)}...`, { x: x + 0.1, y: 2.2 + i * 0.8, w: 2.6, fontSize: 9, color: TEXT_SLATE });
+    p2026Slide.addText(`${cat.title}`, { x: 0.5, y: currentY, fontSize: 16, bold: true, color: "10B981" });
+    currentY += 0.4;
+    
+    // ... rest of logic for cat tasks/timeline/subCategories ...
+    const categoryTasks = (cat as any).tasks;
+    if (categoryTasks) {
+      categoryTasks.forEach((task: any) => {
+        if (currentY > 6.8) {
+           p2026Slide = ppt.addSlide();
+           p2026Slide.background = { color: BRAND_DARK };
+           currentY = 0.5;
+        }
+        p2026Slide.addText(`• ${task.name} (${task.progress}%): ${task.timeline}`, { x: 0.7, y: currentY, w: 10, fontSize: 9, color: "E0F2F1" });
+        currentY += 0.3;
       });
     }
-    if (res.items) {
-      res.items.forEach((item, i) => {
-        krSlide.addText(`√ ${item}`, { x: x + 0.1, y: 2.2 + i * 0.5, w: 2.6, fontSize: 10, bold: true, color: "DC2626" });
+
+    if (cat.timeline) {
+      cat.timeline.forEach((item: any) => {
+        if (currentY > 7.0) {
+           p2026Slide = ppt.addSlide();
+           p2026Slide.background = { color: BRAND_DARK };
+           currentY = 0.5;
+        }
+        let text = `• ${item.month}：${item.goal} (${item.status === 'completed' ? '已完成' : '待办'})`;
+        if (item.specialEvent) text += ` 【${item.specialEvent}】`;
+        p2026Slide.addText(text, { x: 0.7, y: currentY, w: 10, fontSize: 9, color: "E0F2F1" });
+        currentY += 0.3;
       });
     }
-  });
-
-  // Slide 9: Outlook
-  const outlookSlide = ppt.addSlide();
-  outlookSlide.addText("四、展望", { x: 0.5, y: 0.3, fontSize: 24, bold: true, color: BRAND_GREEN });
-  REPORT_DATA.outlook.forEach((item, idx) => {
-    const y = 0.8 + idx * 1.3;
-    outlookSlide.addShape(ppt.ShapeType.rect, { x: 0.5, y, w: "90%", h: 1.1, fill: { color: "111827" }, line: { color: "374151" } });
-    outlookSlide.addText(`0${item.id} ${item.title}`, { x: 0.7, y: y + 0.1, w: 8.5, fontSize: 14, bold: true, color: "34D399" });
-    outlookSlide.addText(item.content, { x: 0.7, y: y + 0.5, w: 8.5, fontSize: 10, color: "9CA3AF" });
+    
+    if ((cat as any).subCategories) {
+      (cat as any).subCategories.forEach((sub: any) => {
+        if (currentY > 6.8) {
+           p2026Slide = ppt.addSlide();
+           p2026Slide.background = { color: BRAND_DARK };
+           currentY = 0.5;
+        }
+        p2026Slide.addText(`  > ${sub.title}`, { x: 0.8, y: currentY, fontSize: 11, bold: true, color: "FFFFFF" });
+        currentY += 0.3;
+        sub.tasks.forEach(task => {
+          if (currentY > 7.0) {
+            p2026Slide = ppt.addSlide();
+            p2026Slide.background = { color: BRAND_DARK };
+            currentY = 0.5;
+          }
+          p2026Slide.addText(`    - ${task.name} (${task.progress}%): ${task.timeline}`, { x: 1.1, y: currentY, w: 9, fontSize: 8, color: "CFD8DC" });
+          currentY += 0.25;
+        });
+      });
+    }
+    currentY += 0.3;
   });
 
   // Save

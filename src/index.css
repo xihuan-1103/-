@@ -16,3 +16,11 @@
 @utility text-gradient-brand {
   @apply bg-clip-text text-transparent bg-gradient-brand;
 }
+
+@utility scrollbar-hide {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
